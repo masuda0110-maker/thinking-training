@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>思考トレーニング - ビジネス思考力を鍛える</title>
+    <title>思考クエスト - ビジネス思考力RPG</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,130 +11,115 @@
         <!-- ヘッダー -->
         <header class="header">
             <div class="header-inner">
-                <h1 class="logo" onclick="showHome()">🧠 思考トレーニング</h1>
-                <div class="header-right">
-                    <span class="score-display" id="totalScore">総合スコア: 0pt</span>
+                <h1 class="logo" onclick="showHome()">⚔️ 思考クエスト</h1>
+                <div class="player-status">
+                    <span class="player-title" id="playerTitle">見習い冒険者</span>
+                    <span class="player-level" id="playerLevel">Lv.1</span>
+                    <div class="exp-bar-mini">
+                        <div class="exp-fill-mini" id="expFillMini" style="width:0%"></div>
+                    </div>
                 </div>
             </div>
         </header>
 
         <!-- ホーム画面 -->
         <main id="homeScreen" class="container">
-            <section class="hero">
-                <h2>ビジネス思考力を鍛えよう</h2>
-                <p>論点思考・仮説思考・MECE・ロジックツリーを使い、<br>ビジネスの課題特定とアクション細分化を実践的にトレーニング</p>
+            <!-- プレイヤー情報 -->
+            <section class="player-card">
+                <div class="player-avatar" id="playerAvatar">🧙</div>
+                <div class="player-info">
+                    <div class="player-name-row">
+                        <span class="player-title-large" id="playerTitleLarge">見習い冒険者</span>
+                        <span class="player-lv" id="playerLvLarge">Lv.1</span>
+                    </div>
+                    <div class="exp-bar">
+                        <div class="exp-fill" id="expFill" style="width:0%"></div>
+                    </div>
+                    <div class="exp-text" id="expText">EXP: 0 / 100</div>
+                    <div class="player-stats">
+                        <span id="statCleared">🏆 クリア: 0</span>
+                        <span id="statCorrect">✅ 正答率: --</span>
+                        <span id="statStreak">🔥 連続正解: 0</span>
+                    </div>
+                </div>
             </section>
 
-            <div class="category-grid">
-                <div class="category-card" onclick="startTraining('ronten')">
-                    <div class="card-icon">🎯</div>
-                    <h3>論点思考</h3>
-                    <p>5W1H型・2者択一型で<br>正しい問いを立てる力</p>
-                    <div class="card-tags">
-                        <span class="tag">5W1H</span>
-                        <span class="tag">Yes/No</span>
-                        <span class="tag">是非・要否</span>
-                    </div>
-                    <span class="card-level">基礎〜応用</span>
-                </div>
-
-                <div class="category-card" onclick="startTraining('kasetsu')">
-                    <div class="card-icon">💡</div>
-                    <h3>仮説思考</h3>
-                    <p>限られた情報から<br>仮説を立て検証する力</p>
-                    <div class="card-tags">
-                        <span class="tag">So What?</span>
-                        <span class="tag">Why So?</span>
-                    </div>
-                    <span class="card-level">基礎〜応用</span>
-                </div>
-
-                <div class="category-card" onclick="startTraining('mece')">
-                    <div class="card-icon">📊</div>
-                    <h3>MECE</h3>
-                    <p>モレなくダブりなく<br>要素を分類する力</p>
-                    <div class="card-tags">
-                        <span class="tag">分類</span>
-                        <span class="tag">網羅性</span>
-                    </div>
-                    <span class="card-level">基礎〜中級</span>
-                </div>
-
-                <div class="category-card" onclick="startTraining('logictree')">
-                    <div class="card-icon">🌳</div>
-                    <h3>ロジックツリー</h3>
-                    <p>課題を構造的に<br>分解・深掘りする力</p>
-                    <div class="card-tags">
-                        <span class="tag">Why型</span>
-                        <span class="tag">How型</span>
-                    </div>
-                    <span class="card-level">中級〜応用</span>
-                </div>
-
-                <div class="category-card" onclick="startTraining('action')">
-                    <div class="card-icon">⚡</div>
-                    <h3>アクション細分化</h3>
-                    <p>抽象的な施策を<br>具体的なタスクに落とす力</p>
-                    <div class="card-tags">
-                        <span class="tag">具体化</span>
-                        <span class="tag">実行可能</span>
-                    </div>
-                    <span class="card-level">中級〜応用</span>
-                </div>
-
-                <div class="category-card" onclick="startTraining('critical')">
-                    <div class="card-icon">🔍</div>
-                    <h3>クリティカル課題特定</h3>
-                    <p>複数の課題から<br>本質的な問題を見抜く力</p>
-                    <div class="card-tags">
-                        <span class="tag">優先順位</span>
-                        <span class="tag">インパクト</span>
-                    </div>
-                    <span class="card-level">応用</span>
-                </div>
-            </div>
+            <!-- ワールドマップ -->
+            <section class="world-map">
+                <h2 class="section-title">⚔️ ダンジョン選択</h2>
+                <div class="dungeon-grid" id="dungeonGrid"></div>
+            </section>
         </main>
 
-        <!-- トレーニング画面 -->
-        <main id="trainingScreen" class="container" style="display:none;">
-            <div class="training-header">
-                <button class="back-btn" onclick="showHome()">← 戻る</button>
-                <div class="training-meta">
-                    <span id="trainingCategory" class="training-category"></span>
-                    <span id="questionCount" class="question-count"></span>
-                </div>
-            </div>
-
-            <div class="training-content">
-                <!-- 問題エリア -->
-                <div class="question-area">
-                    <div class="scenario-box" id="scenarioBox"></div>
-                    <div class="question-box" id="questionBox"></div>
-                </div>
-
-                <!-- 回答エリア -->
-                <div class="answer-area" id="answerArea"></div>
-
-                <!-- フィードバックエリア -->
-                <div class="feedback-area" id="feedbackArea" style="display:none;"></div>
-
-                <!-- アクションボタン -->
-                <div class="action-buttons" id="actionButtons"></div>
-            </div>
+        <!-- フロア選択画面 -->
+        <main id="floorScreen" class="container" style="display:none;">
+            <button class="back-btn" onclick="showHome()">← ワールドマップへ</button>
+            <div class="dungeon-header" id="dungeonHeader"></div>
+            <div class="floor-list" id="floorList"></div>
         </main>
 
-        <!-- 結果画面 -->
+        <!-- バトル画面 -->
+        <main id="battleScreen" class="container" style="display:none;">
+            <div class="battle-hud">
+                <button class="back-btn" onclick="fleeBattle()">🏃 撤退</button>
+                <div class="battle-meta">
+                    <span id="battleCategory" class="battle-category"></span>
+                    <span id="battleProgress" class="battle-progress"></span>
+                </div>
+            </div>
+
+            <!-- エネミー表示 -->
+            <div class="enemy-area" id="enemyArea">
+                <div class="enemy-sprite" id="enemySprite"></div>
+                <div class="enemy-name" id="enemyName"></div>
+                <div class="enemy-hp-bar">
+                    <div class="enemy-hp-fill" id="enemyHpFill" style="width:100%"></div>
+                </div>
+            </div>
+
+            <!-- メッセージウィンドウ -->
+            <div class="message-window" id="messageWindow">
+                <div class="scenario-text" id="scenarioText"></div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+
+            <!-- コマンド（回答）エリア -->
+            <div class="command-area" id="commandArea"></div>
+
+            <!-- フィードバック -->
+            <div class="battle-feedback" id="battleFeedback" style="display:none;"></div>
+
+            <!-- アクション -->
+            <div class="battle-actions" id="battleActions"></div>
+        </main>
+
+        <!-- リザルト画面 -->
         <main id="resultScreen" class="container" style="display:none;">
             <div class="result-card">
-                <h2>トレーニング結果</h2>
-                <div class="result-score" id="resultScore"></div>
-                <div class="result-detail" id="resultDetail"></div>
-                <div class="result-actions">
-                    <button class="btn btn-primary" onclick="retryTraining()">もう一度挑戦</button>
-                    <button class="btn btn-secondary" onclick="showHome()">ホームに戻る</button>
+                <div class="result-banner" id="resultBanner"></div>
+                <div class="result-body">
+                    <div class="result-score-area" id="resultScoreArea"></div>
+                    <div class="exp-gain-area" id="expGainArea"></div>
+                    <div class="result-detail" id="resultDetail"></div>
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="retryBattle()">🔄 再挑戦</button>
+                        <button class="btn btn-secondary" onclick="showFloors(currentCategory)">📋 フロア選択</button>
+                        <button class="btn btn-secondary" onclick="showHome()">🗺️ マップへ</button>
+                    </div>
                 </div>
             </div>
         </main>
+
+        <!-- レベルアップ演出 -->
+        <div class="levelup-overlay" id="levelupOverlay" style="display:none;">
+            <div class="levelup-card">
+                <div class="levelup-icon">⚡</div>
+                <h2>LEVEL UP!</h2>
+                <div class="levelup-level" id="levelupLevel"></div>
+                <div class="levelup-title" id="levelupTitle"></div>
+                <button class="btn btn-primary" onclick="closeLevelUp()">OK</button>
+            </div>
+        </div>
     </div>
 
     <script src="questions.js"></script>
