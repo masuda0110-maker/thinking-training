@@ -258,106 +258,131 @@ body::before {
 .stat-icon { font-size: 0.9rem; }
 .stat-label { color: var(--text-muted); font-size: 0.7rem; }
 
-/* ===== マップパネル ===== */
-.sugoroku-map {
-    padding: 24px 20px 20px;
-    background:
-        linear-gradient(180deg, rgba(10,18,40,0) 0%, rgba(5,10,25,0.5) 100%),
-        repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(255,255,255,0.02) 40px),
-        repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(255,255,255,0.02) 40px);
-    background-size: auto, 40px 40px, 40px 40px;
+/* ===== RPGマップ ===== */
+.map-outer {
+    overflow: hidden;
     position: relative;
-    min-height: 360px;
+    background: #090e06;
+    min-height: 200px;
 }
-.sugoroku-inner {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    position: relative; z-index: 1;
+.map-viewport {
+    position: relative;
+    display: inline-block;
+}
+#mapCanvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
 }
 
-/* マスセル */
-.sugoroku-cell {
-    background: rgba(15, 22, 52, 0.8);
-    border: 1px solid rgba(255,208,96,0.2);
-    border-radius: var(--radius);
-    padding: 18px 14px 14px;
-    cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, border-color 0.2s;
-    position: relative;
-    text-align: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
-    overflow: visible;
+/* ペロッペ 歩行キャラ */
+.hero-sprite {
+    position: absolute;
+    width: 40px; height: 48px;
+    pointer-events: none;
+    z-index: 20;
+    transition: left 0.1s linear, top 0.1s linear;
 }
-.sugoroku-cell:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px var(--gold-glow);
-    border-color: rgba(255,208,96,0.5);
-}
-.sugoroku-cell.cleared {
-    border-color: rgba(255,208,96,0.5);
-    background: rgba(20,30,64,0.9);
+.hero-svg {
+    width: 40px; height: 48px;
+    display: block;
+    transition: transform 0.1s, opacity 0.1s, filter 0.1s;
 }
 
-/* マス番号バッジ */
-.cell-number {
-    position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: #1a1000;
-    width: 22px; height: 22px; border-radius: 50%;
-    font-family: 'DotGothic16', sans-serif; font-size: 0.58rem;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 8px rgba(255,208,96,0.4);
-    z-index: 2;
-    border: 2px solid rgba(255,255,255,0.2);
+/* 歩行フレームアニメーション（足を交互に上げる） */
+.hero-sprite[data-frame="0"] .leg-l { transform: translate(0, -4px); }
+.hero-sprite[data-frame="0"] .leg-r { transform: translate(0,  3px); }
+.hero-sprite[data-frame="1"] .leg-l { transform: translate(0,  3px); }
+.hero-sprite[data-frame="1"] .leg-r { transform: translate(0, -4px); }
+.leg-l, .leg-r {
+    transition: transform 0.1s ease;
+    transform-box: fill-box;
+    transform-origin: center;
 }
-.cell-icon { font-size: 1.8rem; margin-bottom: 6px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
-.cell-name {
+
+/* 建物入場プロンプト */
+.enter-prompt {
+    position: absolute;
+    z-index: 30;
+    background: rgba(6, 10, 22, 0.96);
+    border: 1px solid var(--border-bright);
+    border-radius: 8px;
+    padding: 7px 13px 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.7), 0 0 16px var(--gold-glow);
+    animation: ep-pop 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    pointer-events: none;
+    min-width: 100px;
+}
+@keyframes ep-pop {
+    0%   { transform: scale(0.6) translateY(8px); opacity: 0; }
+    100% { transform: scale(1)   translateY(0);   opacity: 1; }
+}
+.ep-icon { font-size: 1.2rem; line-height: 1; }
+.ep-name {
+    font-size: 0.7rem; font-weight: 700;
+    color: var(--gold);
     font-family: 'DotGothic16', sans-serif;
-    font-size: 0.64rem; color: var(--text-primary);
-    margin-bottom: 8px; letter-spacing: 0.05em;
+    letter-spacing: 0.05em;
 }
-.cell-floors { display: flex; gap: 5px; justify-content: center; margin-bottom: 2px; }
-.floor-dot {
-    width: 10px; height: 10px; border-radius: 3px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    transition: all 0.2s;
+.ep-kbd {
+    font-size: 0.58rem; color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1px 7px; border-radius: 3px;
+    background: rgba(255,255,255,0.04);
+    margin-top: 1px;
 }
-.floor-dot.easy-cleared   { background: var(--easy);   border-color: #1a9c55; box-shadow: 0 0 6px rgba(61,220,132,0.6); }
-.floor-dot.medium-cleared { background: var(--medium); border-color: #d07000; box-shadow: 0 0 6px rgba(255,159,64,0.6); }
-.floor-dot.hard-cleared   { background: var(--hard);   border-color: #cc1100; box-shadow: 0 0 6px rgba(255,74,74,0.6); }
+.enter-prompt::after {
+    content: '▼';
+    position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%);
+    font-size: 0.55rem; color: var(--gold);
+    text-shadow: 0 0 8px var(--gold-glow);
+}
 
-/* カテゴリ別カラーライン（上） */
-.sugoroku-cell[data-cat="ronten"]    { border-top: 3px solid #5588ff; }
-.sugoroku-cell[data-cat="kasetsu"]   { border-top: 3px solid #aa55ff; }
-.sugoroku-cell[data-cat="mece"]      { border-top: 3px solid var(--green); }
-.sugoroku-cell[data-cat="logictree"] { border-top: 3px solid var(--medium); }
-.sugoroku-cell[data-cat="action"]    { border-top: 3px solid var(--coral); }
-.sugoroku-cell[data-cat="critical"]  { border-top: 3px solid var(--cyan); }
-
-/* カテゴリ別グロー */
-.sugoroku-cell[data-cat="ronten"]:hover    { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(85,136,255,0.25); }
-.sugoroku-cell[data-cat="kasetsu"]:hover   { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(170,85,255,0.25); }
-.sugoroku-cell[data-cat="mece"]:hover      { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(61,220,132,0.2); }
-.sugoroku-cell[data-cat="logictree"]:hover { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(255,159,64,0.25); }
-.sugoroku-cell[data-cat="action"]:hover    { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(255,122,92,0.25); }
-.sugoroku-cell[data-cat="critical"]:hover  { box-shadow: 0 12px 28px rgba(0,0,0,0.4), 0 0 20px rgba(77,232,255,0.25); }
-
-/* ペロッペトークン */
-.peroppe-token {
-    position: absolute; top: -36px; left: 50%; transform: translateX(-50%);
-    z-index: 10; pointer-events: none;
-    animation: token-bob 0.6s ease-in-out infinite alternate;
+/* ===== 十字キー (D-Pad) ===== */
+.dpad-wrap {
+    display: flex; justify-content: center;
+    padding: 14px 0 12px;
+    background: rgba(4, 7, 16, 0.7);
+    border-top: 1px solid var(--border);
 }
-.peroppe-token svg {
-    width: 44px; height: 50px;
-    filter: drop-shadow(0 4px 12px rgba(255,208,96,0.5));
+.dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 48px);
+    grid-template-rows:    repeat(3, 48px);
+    gap: 4px;
+    user-select: none;
 }
-@keyframes token-bob {
-    0%   { transform: translateX(-50%) translateY(0); }
-    100% { transform: translateX(-50%) translateY(-5px); }
+.dpad-btn {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.1s, transform 0.08s;
+    touch-action: none;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
 }
+.dpad-btn:active { background: rgba(255,208,96,0.2); transform: scale(0.88) translateY(2px); box-shadow: none; }
+.dpad-up    { grid-column:2; grid-row:1; }
+.dpad-left  { grid-column:1; grid-row:2; }
+.dpad-ok    {
+    grid-column:2; grid-row:2;
+    background: rgba(255,208,96,0.15);
+    border-color: rgba(255,208,96,0.35);
+    color: var(--gold);
+    font-size: 1rem;
+    box-shadow: 0 3px 0 rgba(180,120,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.dpad-right { grid-column:3; grid-row:2; }
+.dpad-down  { grid-column:2; grid-row:3; }
 
 /* ===== 戻るボタン ===== */
 .rpg-back-btn {
@@ -954,7 +979,7 @@ body::before {
     .peroppe-card-inner { flex-direction: column; align-items: center; text-align: center; padding: 20px 16px; }
     .peroppe-speech::before { display: none; }
     .peroppe-stats { justify-content: center; }
-    .sugoroku-inner { grid-template-columns: repeat(2,1fr); gap: 10px; }
+    /* map is scaled by JS */
     .battle-field { min-height: 160px; }
     .enemy-side, .peroppe-side { padding: 12px 10px; }
     .enemy-sprite { font-size: 2.4rem; }
