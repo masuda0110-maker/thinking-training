@@ -212,12 +212,8 @@ function renderQ() {
     document.getElementById('enemySprite').className     = 'enemy-sprite';
     document.getElementById('enemyName').textContent     = q.enemy.name;
     document.getElementById('enemyHpFill').style.width   = '100%';
-    document.getElementById('peroppeHpFill').style.width = '100%';
     document.getElementById('scenarioText').innerHTML    = esc(q.scenario).replace(/\n/g,'<br>');
     document.getElementById('questionText').innerHTML    = `Q${currentQuestionIndex+1}. ${esc(q.question)}`;
-
-    const bpSvg = document.querySelector('#battlePeroppe svg');
-    if (bpSvg) bpSvg.classList.remove('attack','damaged');
 
     const fb = document.getElementById('battleFeedback');
     fb.style.display='none'; fb.className='feedback-card';
@@ -385,11 +381,8 @@ function submitSort() {
 function animateBattle(ok, exp) {
     const sprite = document.getElementById('enemySprite');
     const hp     = document.getElementById('enemyHpFill');
-    const bpSvg  = document.querySelector('#battlePeroppe svg');
-    const php    = document.getElementById('peroppeHpFill');
 
     if (ok) {
-        if (bpSvg) { bpSvg.classList.add('attack'); setTimeout(()=>bpSvg.classList.remove('attack'),550); }
         if (sprite) {
             sprite.classList.add('hit');
             setTimeout(()=>{ sprite.classList.remove('hit'); sprite.classList.add('defeated'); if(hp) hp.style.width='0%'; }, 380);
@@ -401,9 +394,6 @@ function animateBattle(ok, exp) {
             if(r) burst(r.left+r.width/2, r.top+r.height/2, 22, ['#fbbf24','#f87171','#fff','#a78bff']);
         }, 280);
     } else {
-        if (bpSvg) { bpSvg.classList.add('damaged'); setTimeout(()=>bpSvg.classList.remove('damaged'),600); }
-        if (php) { const c=parseInt(php.style.width)||100; php.style.width=Math.max(10,c-28)+'%'; }
-        setTimeout(()=>dmgPop('💦', '#f87171', 'battlePeroppe'), 80);
         setTimeout(()=>flash('rgba(255,50,50,0.3)'), 80);
     }
 }
@@ -503,7 +493,6 @@ function updatePlayerUI() {
     s('playerLvLarge',`Lv.${player.level}`);
     w('expFill',pct+'%');
     s('expText',`${player.exp}/${needed}`);
-    s('peroppeSpeech',t.speech);
     const cr=player.totalAnswered>0?Math.round((player.totalCorrect/player.totalAnswered)*100)+'%':'--';
     s('statCleared',player.totalCleared);
     s('statCorrect',cr);
