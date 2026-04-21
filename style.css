@@ -1,651 +1,876 @@
-/* ===== Reset & Base ===== */
+/* ===== Reset ===== */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ===== RPG カラーパレット ===== */
 :root {
-    --bg: #fffdf4;
-    --bg-secondary: #fdf6dc;
-    --bg-card: #ffffff;
-    --border: rgba(0,0,0,0.07);
-    --border-hover: rgba(0,0,0,0.14);
-    --text-primary: #1a1a1a;
-    --text-secondary: #5a5a5a;
-    --text-tertiary: #909090;
-    --peroppe-yellow: #F5D547;
-    --peroppe-orange: #E8923A;
-    --peroppe-dark: #333;
-    --accent: #E8923A;
-    --accent-hover: #d4812c;
-    --accent-light: rgba(232,146,58,0.1);
-    --success: #34c759;
-    --success-bg: rgba(52,199,89,0.08);
-    --danger: #ff3b30;
-    --danger-bg: rgba(255,59,48,0.08);
-    --easy: #34c759;
+    /* 背景・土台 */
+    --grass-dark:   #3a6b28;
+    --grass-mid:    #4a8033;
+    --grass-light:  #5a9a3e;
+    --stone:        #8a8070;
+    --stone-light:  #b0a890;
+    --dirt:         #8b6914;
+    --water:        #3a7ab0;
+
+    /* パネル */
+    --panel-bg:     #1c1200;
+    --panel-border: #c8a040;
+    --panel-inner:  #f5e8c0;
+    --panel-title:  #2a1a00;
+
+    /* テキスト */
+    --text-rpg:     #2a1a00;
+    --text-light:   #f5e8c0;
+    --text-gold:    #c8a040;
+    --text-dim:     #7a6040;
+
+    /* バトル */
+    --hp-green:     #34c759;
+    --hp-yellow:    #ffcc00;
+    --hp-red:       #ff3b30;
+    --exp-blue:     #4488ff;
+
+    /* フィードバック */
+    --success:      #34c759;
+    --success-bg:   rgba(52,199,89,0.12);
+    --danger:       #ff3b30;
+    --danger-bg:    rgba(255,59,48,0.12);
+
+    /* 難易度 */
+    --easy:   #34c759;
     --medium: #ff9500;
-    --hard: #ff3b30;
-    --path-color: #f0d060;
-    --radius: 20px;
-    --radius-sm: 12px;
-    --radius-xs: 8px;
-    --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
-    --shadow: 0 4px 16px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
-    --transition: 0.28s cubic-bezier(0.25,0.1,0.25,1);
+    --hard:   #ff3b30;
+
+    --radius: 4px;
+    --radius-sm: 4px;
 }
 
+/* ===== フォント ===== */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Maru Gothic Pro', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text-primary);
+    font-family: 'DotGothic16', 'Noto Sans JP', sans-serif;
+    background: var(--grass-mid);
+    color: var(--text-rpg);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    /* 草タイル背景 */
+    background-image:
+        repeating-linear-gradient(0deg,   transparent, transparent 31px, rgba(0,0,0,0.04) 32px),
+        repeating-linear-gradient(90deg,  transparent, transparent 31px, rgba(0,0,0,0.04) 32px);
+    background-size: 32px 32px;
+}
+
+/* ===== スクリーンフラッシュ ===== */
+.screen-flash {
+    position: fixed; inset: 0;
+    background: white; pointer-events: none;
+    animation: flash-anim 0.4s ease forwards;
+    z-index: 9000;
+}
+@keyframes flash-anim {
+    0%   { opacity: 0.8; }
+    100% { opacity: 0; }
 }
 
 /* ===== ヘッダー ===== */
 .header {
+    background: var(--panel-bg);
+    border-bottom: 3px solid var(--panel-border);
     position: sticky; top: 0; z-index: 100;
-    background: rgba(255,253,244,0.88);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--border);
 }
 .header-inner {
-    max-width: 900px; margin: 0 auto;
-    padding: 12px 20px;
+    max-width: 860px; margin: 0 auto;
+    padding: 10px 20px;
     display: flex; justify-content: space-between; align-items: center;
 }
 .logo {
-    font-size: 1rem; font-weight: 700;
-    color: var(--text-primary); cursor: pointer;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1rem; font-weight: 400;
+    color: var(--text-gold);
+    cursor: pointer; user-select: none;
     display: flex; align-items: center; gap: 8px;
-    user-select: none;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
 }
-.logo-peroppe {
-    display: inline-block;
-    width: 28px; height: 28px;
-    background: var(--peroppe-yellow);
-    border-radius: 50%;
-    border: 2px solid var(--peroppe-dark);
-    position: relative;
-    flex-shrink: 0;
-}
-.logo-peroppe::after {
-    content: '';
-    position: absolute;
-    bottom: 4px; left: 50%; transform: translateX(-50%);
-    width: 10px; height: 7px;
-    background: var(--peroppe-orange);
-    border-radius: 50%;
-    border: 1.5px solid var(--peroppe-dark);
-}
+.logo-icon { font-size: 1.2rem; }
 .player-status { display: flex; align-items: center; gap: 8px; }
-.player-level { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+.player-level {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.85rem; color: var(--text-gold);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
 .exp-bar-mini {
-    width: 48px; height: 4px;
-    background: var(--bg-secondary); border-radius: 2px; overflow: hidden;
+    width: 56px; height: 6px;
+    background: #333; border: 1px solid var(--panel-border);
+    border-radius: 2px; overflow: hidden;
 }
 .exp-fill-mini {
-    height: 100%; background: var(--accent); border-radius: 2px;
+    height: 100%;
+    background: linear-gradient(90deg, #4488ff, #66aaff);
     transition: width 0.6s ease;
 }
 
 /* ===== Container ===== */
-.container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+.container {
+    max-width: 860px; margin: 0 auto; padding: 24px 16px;
+}
+
+/* ===== RPGパネル（木製額縁） ===== */
+.rpg-panel {
+    background: var(--panel-bg);
+    border: 3px solid var(--panel-border);
+    border-radius: var(--radius);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.4), inset 0 0 0 2px rgba(200,160,64,0.2);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.panel-title-bar {
+    background: var(--panel-border);
+    padding: 6px 14px;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.8rem;
+    color: var(--panel-title);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+}
 
 /* ===== ペロッペカード ===== */
-.peroppe-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 28px;
-    display: flex; gap: 24px; align-items: center;
-    margin-bottom: 40px;
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    overflow: hidden;
-}
-.peroppe-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, #F5D547, #E8923A, #F5D547);
+.peroppe-card-inner {
+    display: flex; gap: 20px; align-items: center;
+    padding: 20px;
+    background: var(--panel-inner);
 }
 .peroppe-character { flex-shrink: 0; }
 .peroppe-svg {
-    width: 120px; height: 108px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-    animation: peroppe-idle 3s ease-in-out infinite;
+    width: 110px; height: 124px;
+    animation: peroppe-walk 0.6s steps(2) infinite;
+    filter: drop-shadow(3px 5px 3px rgba(0,0,0,0.25));
 }
-@keyframes peroppe-idle {
-    0%,100% { transform: translateY(0) rotate(0deg); }
-    33% { transform: translateY(-4px) rotate(-1deg); }
-    66% { transform: translateY(-2px) rotate(1deg); }
+/* 歩行アニメーション（左右にわずかに揺れる） */
+@keyframes peroppe-walk {
+    0%   { transform: translateY(0) rotate(-1.5deg); }
+    50%  { transform: translateY(-3px) rotate(1.5deg); }
+    100% { transform: translateY(0) rotate(-1.5deg); }
 }
 .peroppe-info { flex: 1; min-width: 0; }
 .peroppe-name-row {
     display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;
 }
-.peroppe-title { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
-.peroppe-lv { font-size: 1.3rem; font-weight: 800; color: var(--accent); }
+.peroppe-title {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.88rem; color: var(--text-rpg);
+}
+.peroppe-lv {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1.1rem; color: var(--dirt);
+    font-weight: 400;
+}
+/* 吹き出し */
 .peroppe-speech {
-    background: var(--bg-secondary);
-    border-radius: 0 12px 12px 12px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    color: var(--text-rpg);
     margin-bottom: 12px;
     line-height: 1.6;
     position: relative;
-    font-weight: 500;
 }
 .peroppe-speech::before {
     content: '';
-    position: absolute; top: 0; left: -8px;
-    width: 0; height: 0;
-    border-top: 8px solid var(--bg-secondary);
-    border-left: 8px solid transparent;
+    position: absolute; top: 8px; left: -10px;
+    border: 5px solid transparent;
+    border-right-color: #ccc;
+}
+.peroppe-speech::after {
+    content: '';
+    position: absolute; top: 9px; left: -7px;
+    border: 4px solid transparent;
+    border-right-color: white;
+}
+/* EXPバー */
+.rpg-exp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.rpg-label {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.68rem; color: var(--text-dim);
+    white-space: nowrap;
 }
 .exp-bar {
-    width: 100%; height: 7px;
-    background: var(--bg-secondary); border-radius: 4px; overflow: hidden; margin-bottom: 6px;
+    flex: 1; height: 10px;
+    background: #333;
+    border: 1px solid #555;
+    border-radius: 2px;
+    overflow: hidden;
 }
 .exp-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--peroppe-yellow), var(--peroppe-orange));
-    border-radius: 4px; transition: width 0.8s ease;
-}
-.exp-text { font-size: 0.72rem; color: var(--text-tertiary); font-weight: 500; margin-bottom: 8px; }
-.peroppe-stats {
-    display: flex; gap: 16px;
-    font-size: 0.78rem; color: var(--text-secondary); font-weight: 500;
-}
-
-/* ===== セクションタイトル ===== */
-.section-title {
-    font-size: 1.3rem; font-weight: 800;
-    color: var(--text-primary); margin-bottom: 28px;
-    letter-spacing: -0.01em;
-}
-
-/* ===== すごろくマップ ===== */
-.sugoroku-section { position: relative; }
-.sugoroku-map {
+    background: linear-gradient(90deg, #4488ff, #66aaff);
+    transition: width 0.8s ease;
     position: relative;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 40px 32px;
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-    min-height: 500px;
 }
-.sugoroku-map::before {
+.exp-fill::after {
     content: '';
-    position: absolute; inset: 0;
+    position: absolute; top: 1px; left: 2px; right: 2px; height: 3px;
+    background: rgba(255,255,255,0.35); border-radius: 2px;
+}
+.exp-text {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.65rem; color: var(--text-dim); white-space: nowrap;
+}
+/* ステータス数値 */
+.peroppe-stats { display: flex; gap: 14px; }
+.stat-item {
+    display: flex; align-items: center; gap: 4px;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.72rem; color: var(--text-rpg);
+}
+.stat-icon { font-size: 0.85rem; }
+
+/* ===== マップパネル ===== */
+.map-panel { }
+.sugoroku-map {
+    background: var(--grass-mid);
     background-image:
-        radial-gradient(circle at 20% 80%, rgba(245,213,71,0.12) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(232,146,58,0.08) 0%, transparent 50%);
-    pointer-events: none;
+        repeating-linear-gradient(0deg,   transparent, transparent 15px, rgba(0,0,0,0.05) 16px),
+        repeating-linear-gradient(90deg,  transparent, transparent 15px, rgba(0,0,0,0.05) 16px);
+    background-size: 16px 16px;
+    padding: 20px 16px 16px;
+    position: relative;
+    min-height: 400px;
 }
-
-/* すごろくパス（点線道） */
-.sugoroku-path {
-    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* マスのグリッドレイアウト（蛇行） */
-.sugoroku-grid {
+.sugoroku-inner {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 16px;
     position: relative; z-index: 1;
 }
 
-/* 各マス */
+/* マスセル */
 .sugoroku-cell {
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 18px 16px;
+    background: var(--panel-inner);
+    border: 3px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 14px 12px 12px;
     cursor: pointer;
-    transition: all var(--transition);
+    transition: transform 0.15s, box-shadow 0.15s;
     position: relative;
-    box-shadow: var(--shadow-sm);
     text-align: center;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.35);
 }
-.sugoroku-cell:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: var(--accent); }
+.sugoroku-cell:hover { transform: translateY(-2px); box-shadow: 3px 5px 0 rgba(0,0,0,0.35); }
 .sugoroku-cell.locked { opacity: 0.45; cursor: not-allowed; }
-.sugoroku-cell.locked:hover { transform: none; box-shadow: var(--shadow-sm); border-color: var(--border); }
-.sugoroku-cell.cleared { border-color: var(--peroppe-yellow); background: rgba(245,213,71,0.06); }
+.sugoroku-cell.locked:hover { transform: none; }
+.sugoroku-cell.cleared { border-color: #c8a040; }
 
-/* マス番号バッジ */
+/* マス番号 */
 .cell-number {
     position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-    width: 24px; height: 24px;
-    background: var(--peroppe-yellow);
-    border: 2px solid var(--peroppe-dark);
-    border-radius: 50%;
-    font-size: 0.65rem; font-weight: 800;
-    color: var(--peroppe-dark);
+    background: var(--panel-border); color: var(--panel-title);
+    width: 22px; height: 22px; border-radius: 50%;
+    font-family: 'DotGothic16', sans-serif; font-size: 0.6rem;
     display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--panel-title);
     z-index: 2;
 }
-.sugoroku-cell.cleared .cell-number {
-    background: var(--accent); color: white; border-color: var(--accent);
+.cell-icon { font-size: 1.6rem; margin-bottom: 5px; }
+.cell-name {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.68rem; color: var(--text-rpg); margin-bottom: 3px;
 }
-
-/* セル内容 */
-.cell-icon { font-size: 1.8rem; margin-bottom: 6px; }
-.cell-name { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-.cell-desc { font-size: 0.68rem; color: var(--text-tertiary); margin-bottom: 8px; line-height: 1.4; }
-.cell-floors { display: flex; gap: 4px; justify-content: center; }
+.cell-desc { font-size: 0.62rem; color: var(--text-dim); margin-bottom: 8px; line-height: 1.4; }
+.cell-floors { display: flex; gap: 5px; justify-content: center; }
 .floor-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: var(--bg-secondary);
-    transition: all var(--transition);
+    width: 10px; height: 10px; border-radius: 2px;
+    background: #ccc; border: 1.5px solid #999;
 }
-.floor-dot.easy-cleared { background: var(--easy); border-color: var(--easy); }
-.floor-dot.medium-cleared { background: var(--medium); border-color: var(--medium); }
-.floor-dot.hard-cleared { background: var(--hard); border-color: var(--hard); }
+.floor-dot.easy-cleared   { background: var(--easy);   border-color: #1a8c40; }
+.floor-dot.medium-cleared { background: var(--medium); border-color: #cc7700; }
+.floor-dot.hard-cleared   { background: var(--hard);   border-color: #cc1100; }
 
-/* ペロッペの現在地 */
+/* カテゴリ別アクセント */
+.sugoroku-cell[data-cat="ronten"]    { border-top: 4px solid #4488ff; }
+.sugoroku-cell[data-cat="kasetsu"]   { border-top: 4px solid #aa44ff; }
+.sugoroku-cell[data-cat="mece"]      { border-top: 4px solid #34c759; }
+.sugoroku-cell[data-cat="logictree"] { border-top: 4px solid #ff9500; }
+.sugoroku-cell[data-cat="action"]    { border-top: 4px solid #ff3b30; }
+.sugoroku-cell[data-cat="critical"]  { border-top: 4px solid #5ac8fa; }
+
+/* ペロッペトークン */
 .peroppe-token {
-    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    position: absolute; top: -32px; left: 50%; transform: translateX(-50%);
     z-index: 10; pointer-events: none;
-    animation: token-bounce 0.8s ease-in-out;
+    animation: token-arrive 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
-.peroppe-token svg { width: 40px; height: 36px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2)); }
-@keyframes token-bounce {
-    0% { transform: translateX(-50%) translateY(-20px) scale(0.8); opacity: 0; }
-    60% { transform: translateX(-50%) translateY(4px) scale(1.05); }
+.peroppe-token svg { width: 44px; height: 50px; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); }
+@keyframes token-arrive {
+    0%   { transform: translateX(-50%) translateY(-24px) scale(0.7); opacity: 0; }
+    70%  { transform: translateX(-50%) translateY(4px) scale(1.06); }
     100% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
 }
 
-/* カラーアクセント by category */
-.sugoroku-cell[data-cat="ronten"] { border-top: 3px solid #007aff; }
-.sugoroku-cell[data-cat="kasetsu"] { border-top: 3px solid #af52de; }
-.sugoroku-cell[data-cat="mece"] { border-top: 3px solid #34c759; }
-.sugoroku-cell[data-cat="logictree"] { border-top: 3px solid #ff9500; }
-.sugoroku-cell[data-cat="action"] { border-top: 3px solid #ff3b30; }
-.sugoroku-cell[data-cat="critical"] { border-top: 3px solid #5ac8fa; }
-
-/* ゴールマス */
-.sugoroku-cell.goal-cell {
-    background: linear-gradient(135deg, rgba(245,213,71,0.15), rgba(232,146,58,0.1));
-    border: 2px dashed var(--peroppe-yellow);
-    grid-column: 2;
+/* マスの道（点線） */
+.map-path {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
 }
-.sugoroku-cell.goal-cell .cell-icon { font-size: 2.2rem; }
 
-/* ===== フロア選択画面 ===== */
-.back-btn {
-    background: none; border: none;
-    padding: 8px 0; font-size: 0.88rem;
-    color: var(--accent); cursor: pointer;
-    transition: opacity var(--transition);
-    font-weight: 600; margin-bottom: 24px;
+/* ===== フロア選択 ===== */
+.rpg-back-btn {
+    display: inline-block;
+    background: var(--panel-bg); color: var(--text-gold);
+    border: 2px solid var(--panel-border);
+    padding: 6px 16px; border-radius: var(--radius);
+    font-family: 'DotGothic16', sans-serif; font-size: 0.78rem;
+    cursor: pointer; margin-bottom: 16px;
+    transition: background 0.15s;
 }
-.back-btn:hover { opacity: 0.65; }
+.rpg-back-btn:hover { background: #2a1a00; }
 
-.dungeon-header {
-    background: var(--bg-secondary);
-    border-radius: var(--radius);
-    padding: 36px 24px;
+.dungeon-header { }
+.dungeon-header .dh-inner {
+    padding: 20px; background: var(--panel-inner);
     text-align: center;
-    margin-bottom: 24px;
-    border: 1px solid var(--border);
 }
-.dungeon-header .dh-icon { font-size: 2.2rem; margin-bottom: 10px; }
+.dungeon-header .dh-icon { font-size: 2rem; margin-bottom: 6px; }
 .dungeon-header h2 {
-    font-size: 1.5rem; font-weight: 800;
-    color: var(--text-primary); margin-bottom: 4px;
-    letter-spacing: -0.02em;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1rem; color: var(--text-rpg); margin-bottom: 4px;
 }
-.dungeon-header p { color: var(--text-secondary); font-size: 0.88rem; }
+.dungeon-header p { font-size: 0.78rem; color: var(--text-dim); }
 
-.floor-list {
-    display: flex; flex-direction: column;
-    gap: 10px; max-width: 600px; margin: 0 auto;
-}
+.floor-list { display: flex; flex-direction: column; gap: 10px; max-width: 580px; margin: 0 auto; }
 .floor-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 18px 22px;
-    display: flex; align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all var(--transition);
-    box-shadow: var(--shadow-sm);
+    background: var(--panel-inner);
+    border: 3px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: transform 0.12s, box-shadow 0.12s;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
 }
-.floor-card:hover:not(.locked) {
-    transform: translateX(4px); box-shadow: var(--shadow); border-color: var(--border-hover);
-}
-.floor-card.locked { opacity: 0.35; cursor: not-allowed; }
-.floor-left { display: flex; align-items: center; gap: 14px; }
+.floor-card:hover:not(.locked) { transform: translateX(3px) translateY(-1px); }
+.floor-card.locked { opacity: 0.4; cursor: not-allowed; }
+.floor-left { display: flex; align-items: center; gap: 12px; }
 .floor-num {
-    width: 40px; height: 40px; border-radius: 50%;
+    width: 38px; height: 38px; border-radius: var(--radius);
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
+    font-family: 'DotGothic16', sans-serif; font-size: 0.72rem;
+    border: 2px solid currentColor; flex-shrink: 0;
 }
-.floor-num.easy { background: rgba(52,199,89,0.1); color: var(--easy); }
-.floor-num.medium { background: rgba(255,149,0,0.1); color: var(--medium); }
-.floor-num.hard { background: rgba(255,59,48,0.1); color: var(--hard); }
+.floor-num.easy   { color: var(--easy);   background: rgba(52,199,89,0.12); }
+.floor-num.medium { color: var(--medium); background: rgba(255,149,0,0.12); }
+.floor-num.hard   { color: var(--hard);   background: rgba(255,59,48,0.12); }
 .floor-info h4 {
-    font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1px;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.82rem; color: var(--text-rpg); margin-bottom: 2px;
 }
-.floor-info p { font-size: 0.76rem; color: var(--text-tertiary); }
+.floor-info p { font-size: 0.68rem; color: var(--text-dim); }
 .floor-right { display: flex; align-items: center; gap: 12px; }
-.floor-stars { font-size: 0.88rem; letter-spacing: 2px; }
-.floor-reward { font-size: 0.7rem; color: var(--accent); font-weight: 700; }
-.lock-icon { color: var(--text-tertiary); opacity: 0.4; }
+.floor-stars { font-size: 0.9rem; letter-spacing: 2px; }
+.floor-reward { font-family: 'DotGothic16', sans-serif; font-size: 0.65rem; color: var(--dirt); }
 
 /* ===== バトル画面 ===== */
 .battle-hud {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 .battle-meta { display: flex; align-items: center; gap: 10px; }
-.battle-category { font-weight: 700; font-size: 0.88rem; color: var(--text-primary); }
+.battle-category {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.78rem; color: var(--text-light);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
 .battle-progress {
-    background: var(--bg-secondary); color: var(--text-tertiary);
-    padding: 4px 12px; border-radius: 100px;
-    font-size: 0.74rem; font-weight: 600;
+    background: var(--panel-bg); color: var(--text-gold);
+    border: 1px solid var(--panel-border);
+    padding: 3px 10px; border-radius: 2px;
+    font-family: 'DotGothic16', sans-serif; font-size: 0.65rem;
 }
 
-/* バトルステージ（エネミー + ペロッペ） */
-.battle-stage {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    margin-bottom: 20px; gap: 12px;
-    max-width: 640px; margin-left: auto; margin-right: auto;
-}
-.enemy-area {
-    flex: 1; text-align: center;
-    padding: 24px 16px;
-    background: var(--bg-secondary);
+/* バトルフィールド */
+.battle-field {
+    position: relative;
+    border: 3px solid var(--panel-border);
     border-radius: var(--radius);
-    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+    min-height: 180px;
 }
+.battle-field-bg {
+    position: absolute; inset: 0;
+    background:
+        linear-gradient(180deg,
+            #87ceeb 0%, #87ceeb 45%,
+            #5a9a3e 45%, #4a8033 55%,
+            #3a6b28 55%
+        );
+}
+/* 雲の装飾 */
+.battle-field-bg::before {
+    content: '☁️ ☁️ ☁️';
+    position: absolute; top: 6px; left: 10px; right: 10px;
+    font-size: 1rem; letter-spacing: 8px;
+    opacity: 0.6;
+}
+/* 草の装飾 */
+.battle-field-bg::after {
+    content: '';
+    position: absolute;
+    bottom: 40%; left: 0; right: 0; height: 4px;
+    background: repeating-linear-gradient(90deg, #5a9a3e 0px, #5a9a3e 8px, #3a6b28 8px, #3a6b28 16px);
+    opacity: 0.5;
+}
+
+.enemy-side, .peroppe-side {
+    position: relative; z-index: 1;
+    padding: 16px;
+}
+.enemy-side { float: left; text-align: center; width: 50%; }
+.peroppe-side { float: right; text-align: center; width: 50%; }
+.battle-field::after { content: ''; display: table; clear: both; }
+
+.enemy-name-plate {
+    display: inline-block;
+    background: var(--panel-bg); color: var(--text-gold);
+    border: 1px solid var(--panel-border);
+    padding: 2px 8px; border-radius: 2px;
+    font-family: 'DotGothic16', sans-serif; font-size: 0.65rem;
+    margin-bottom: 4px;
+}
+.enemy-hp-wrap, .peroppe-hp-wrap {
+    display: flex; align-items: center; gap: 5px;
+    margin-bottom: 6px; justify-content: center;
+}
+.enemy-hp-bar, .peroppe-hp-bar {
+    flex: 1; max-width: 100px; height: 8px;
+    background: #222; border: 1px solid #555;
+    border-radius: 2px; overflow: hidden;
+}
+.enemy-hp-fill, .peroppe-hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--hp-red), var(--hp-green));
+    transition: width 0.5s ease;
+    position: relative;
+}
+.enemy-hp-fill::after, .peroppe-hp-fill::after {
+    content: '';
+    position: absolute; top: 1px; left: 1px; right: 1px; height: 3px;
+    background: rgba(255,255,255,0.3); border-radius: 1px;
+}
+
 .enemy-sprite {
-    font-size: 3.2rem; margin-bottom: 8px;
-    animation: enemy-idle 2.8s ease-in-out infinite;
+    font-size: 3rem; display: block;
+    animation: enemy-idle 2s steps(2) infinite;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
 }
 @keyframes enemy-idle {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
 }
-.enemy-sprite.hit { animation: enemy-hit 0.4s ease; }
+.enemy-sprite.hit {
+    animation: enemy-hit 0.4s ease;
+}
 @keyframes enemy-hit {
-    0% { transform: translateX(0); opacity: 1; }
-    25% { transform: translateX(-8px); opacity: 0.4; }
-    75% { transform: translateX(8px); opacity: 0.4; }
-    100% { transform: translateX(0); opacity: 1; }
+    0%   { transform: translateX(0); filter: brightness(2); }
+    25%  { transform: translateX(-8px); }
+    75%  { transform: translateX(8px); }
+    100% { transform: translateX(0); filter: brightness(1); }
 }
-.enemy-sprite.defeated { animation: enemy-defeat 0.6s ease forwards; }
+.enemy-sprite.defeated {
+    animation: enemy-defeat 0.5s ease forwards;
+}
 @keyframes enemy-defeat {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.2); opacity: 0.3; }
+    0%   { transform: scale(1); opacity: 1; }
+    40%  { transform: scale(1.2) rotate(10deg); filter: brightness(3); }
     100% { transform: scale(0); opacity: 0; }
 }
-.enemy-name { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
-.enemy-hp-bar {
-    max-width: 200px; height: 5px;
-    background: rgba(0,0,0,0.07); border-radius: 3px; overflow: hidden; margin: 0 auto;
+
+.peroppe-svg-battle {
+    width: 80px; height: 90px;
+    animation: peroppe-battle-idle 1s steps(2) infinite;
+    filter: drop-shadow(2px 4px 3px rgba(0,0,0,0.25));
 }
-.enemy-hp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--danger), var(--easy));
-    border-radius: 3px; transition: width 0.5s ease;
+@keyframes peroppe-battle-idle {
+    0%   { transform: translateY(0) rotate(0deg); }
+    50%  { transform: translateY(-2px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+.peroppe-svg-battle.attack {
+    animation: peroppe-attack 0.4s ease;
+}
+@keyframes peroppe-attack {
+    0%   { transform: translateX(0) scale(1); }
+    30%  { transform: translateX(20px) scale(1.1); }
+    60%  { transform: translateX(-5px) scale(0.95); }
+    100% { transform: translateX(0) scale(1); }
+}
+.peroppe-svg-battle.damaged {
+    animation: peroppe-damage 0.5s ease;
+}
+@keyframes peroppe-damage {
+    0%   { transform: translateX(0); filter: brightness(1); }
+    20%  { transform: translateX(-10px); filter: brightness(5) hue-rotate(180deg); }
+    60%  { transform: translateX(5px); }
+    100% { transform: translateX(0); filter: brightness(1); }
 }
 
-.battle-peroppe {
-    width: 80px; flex-shrink: 0;
-    animation: battle-peroppe-idle 2s ease-in-out infinite;
+/* ダメージ数値ポップ */
+.dmg-pop {
+    position: fixed;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1.4rem;
+    font-weight: bold;
+    pointer-events: none;
+    animation: dmg-fly 1.2s ease-out forwards;
+    z-index: 200;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
 }
-@keyframes battle-peroppe-idle {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-3px); }
+@keyframes dmg-fly {
+    0%   { transform: translateY(0) scale(1.2); opacity: 1; }
+    60%  { transform: translateY(-40px) scale(1); opacity: 1; }
+    100% { transform: translateY(-70px) scale(0.8); opacity: 0; }
 }
-.peroppe-svg-sm { width: 80px; height: 72px; }
 
-/* メッセージウィンドウ */
-.message-window {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    max-width: 640px; margin-left: auto; margin-right: auto;
-    box-shadow: var(--shadow-sm);
+/* ===== メッセージウィンドウ（RPGダイアログ） ===== */
+.rpg-message-window {
+    background: var(--panel-bg);
+    border: 3px solid var(--panel-border);
+    border-radius: var(--radius);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.4), inset 0 0 0 1px rgba(200,160,64,0.15);
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    position: relative;
+}
+/* コーナー装飾 */
+.rpg-message-window::before {
+    content: '◆'; position: absolute; top: 4px; left: 6px;
+    font-size: 0.5rem; color: var(--panel-border); opacity: 0.6;
+}
+.rpg-message-window::after {
+    content: '◆'; position: absolute; top: 4px; right: 6px;
+    font-size: 0.5rem; color: var(--panel-border); opacity: 0.6;
 }
 .scenario-text {
-    font-size: 0.85rem; color: var(--text-secondary);
-    margin-bottom: 12px; padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+    font-size: 0.75rem; color: #aaa;
+    margin-bottom: 10px; padding-bottom: 10px;
+    border-bottom: 1px solid rgba(200,160,64,0.2);
     line-height: 1.8;
 }
 .question-text {
-    font-size: 0.92rem; font-weight: 700;
-    color: var(--text-primary); line-height: 1.7;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.82rem; color: var(--text-light); line-height: 1.8;
 }
 
-/* コマンドエリア */
-.command-area { max-width: 640px; margin: 0 auto 16px; }
+/* ===== コマンド（選択肢）エリア ===== */
+.command-area { max-width: 680px; margin: 0 auto 12px; }
 
 /* 選択肢 */
-.choice-list { display: flex; flex-direction: column; gap: 8px; }
+.choice-list { display: flex; flex-direction: column; gap: 6px; }
 .choice-item {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 13px 17px;
-    cursor: pointer; transition: all var(--transition);
-    font-size: 0.86rem; display: flex; align-items: flex-start;
-    gap: 10px; color: var(--text-primary);
-    box-shadow: var(--shadow-sm);
+    background: var(--panel-inner);
+    border: 2px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 11px 15px;
+    cursor: pointer; transition: all 0.12s;
+    font-size: 0.8rem; display: flex; align-items: flex-start;
+    gap: 10px; color: var(--text-rpg);
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.25);
 }
-.choice-item:hover { border-color: var(--accent); background: var(--accent-light); }
-.choice-item.selected { border-color: var(--accent); background: var(--accent-light); }
-.choice-item.correct { border-color: var(--success); background: var(--success-bg); }
-.choice-item.incorrect { border-color: var(--danger); background: var(--danger-bg); }
+.choice-item:hover {
+    background: #fff8dc; border-color: #e8a000;
+    transform: translateX(3px);
+}
+.choice-item.selected { background: #fff0aa; border-color: #e8a000; transform: translateX(3px); }
+.choice-item.correct  { background: rgba(52,199,89,0.15); border-color: var(--easy); }
+.choice-item.incorrect{ background: rgba(255,59,48,0.12); border-color: var(--danger); }
 .choice-marker {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--bg-secondary); color: var(--text-tertiary);
-    font-size: 0.72rem; font-weight: 700; flex-shrink: 0;
-    transition: all var(--transition);
+    width: 24px; height: 24px; border-radius: 2px;
+    background: var(--panel-border); color: var(--panel-title);
+    font-family: 'DotGothic16', sans-serif; font-size: 0.62rem;
+    flex-shrink: 0;
 }
-.choice-item.selected .choice-marker { background: var(--accent); color: white; }
-.choice-item.correct .choice-marker { background: var(--success); color: white; }
+.choice-item.selected  .choice-marker { background: #e8a000; }
+.choice-item.correct   .choice-marker { background: var(--easy);   color: white; }
 .choice-item.incorrect .choice-marker { background: var(--danger); color: white; }
 
 /* テキスト入力 */
-.text-input-area { display: flex; flex-direction: column; gap: 10px; }
+.text-input-area { display: flex; flex-direction: column; gap: 8px; }
 .text-input-area textarea {
-    width: 100%; min-height: 120px;
-    background: var(--bg-card); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 14px;
-    font-size: 0.86rem; font-family: inherit; line-height: 1.7;
-    color: var(--text-primary); resize: vertical;
-    transition: all var(--transition); box-shadow: var(--shadow-sm);
+    width: 100%; min-height: 110px;
+    background: var(--panel-inner); border: 2px solid var(--panel-border);
+    border-radius: var(--radius); padding: 12px;
+    font-family: 'Noto Sans JP', sans-serif; font-size: 0.82rem;
+    color: var(--text-rpg); resize: vertical;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1);
 }
 .text-input-area textarea:focus {
-    outline: none; border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(232,146,58,0.15);
+    outline: none; border-color: #e8a000;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1), 0 0 0 2px rgba(232,160,0,0.2);
 }
-.text-input-area textarea::placeholder { color: var(--text-tertiary); }
-.hint { color: var(--text-tertiary); font-size: 0.76rem; line-height: 1.6; }
+.text-input-area textarea::placeholder { color: var(--text-dim); }
+.hint { font-size: 0.72rem; color: var(--text-dim); line-height: 1.6; }
 
 /* 並べ替え */
-.sortable-list { display: flex; flex-direction: column; gap: 8px; }
+.sortable-list { display: flex; flex-direction: column; gap: 6px; }
 .sortable-item {
-    background: var(--bg-card); border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 12px 15px;
+    background: var(--panel-inner); border: 2px solid var(--panel-border);
+    border-radius: var(--radius); padding: 10px 13px;
     display: flex; align-items: center; gap: 10px;
-    color: var(--text-primary); font-size: 0.86rem;
-    box-shadow: var(--shadow-sm);
+    color: var(--text-rpg); font-size: 0.8rem;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
 }
 .sortable-item .order-num {
-    background: var(--bg-secondary); color: var(--text-tertiary);
-    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; font-size: 0.72rem; font-weight: 700;
+    background: var(--panel-border); color: var(--panel-title);
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DotGothic16', sans-serif; font-size: 0.6rem;
+    border-radius: 2px;
 }
 .sort-buttons { display: flex; gap: 4px; }
-.sort-buttons .btn { padding: 4px 10px; font-size: 0.76rem; }
 
 /* 分類 */
-.classify-area { display: flex; flex-direction: column; gap: 12px; }
+.classify-area { display: flex; flex-direction: column; gap: 10px; }
 .classify-items {
-    display: flex; flex-wrap: wrap; gap: 8px; padding: 14px;
-    background: var(--bg-secondary); border-radius: var(--radius-sm); min-height: 50px;
+    display: flex; flex-wrap: wrap; gap: 7px; padding: 12px;
+    background: rgba(0,0,0,0.1); border-radius: var(--radius);
+    border: 1px solid rgba(200,160,64,0.3); min-height: 48px;
 }
 .classify-chip {
-    background: var(--bg-card); border: 1.5px solid var(--border);
-    border-radius: 100px; padding: 6px 14px;
-    font-size: 0.8rem; cursor: pointer;
-    transition: all var(--transition); color: var(--text-primary);
+    background: var(--panel-inner); border: 2px solid var(--panel-border);
+    border-radius: 2px; padding: 5px 12px;
+    font-size: 0.76rem; cursor: pointer; color: var(--text-rpg);
+    transition: all 0.12s; box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
 }
-.classify-chip:hover { border-color: var(--accent); background: var(--accent-light); }
+.classify-chip:hover { background: #fff8dc; border-color: #e8a000; }
 .classify-chip.placed { opacity: 0.25; pointer-events: none; }
-.classify-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px,1fr)); gap: 10px; }
+.classify-buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 10px; }
 .classify-bucket {
-    border: 2px dashed rgba(0,0,0,0.1); border-radius: var(--radius-sm);
-    padding: 14px; min-height: 80px; transition: all var(--transition); cursor: pointer;
+    border: 2px dashed rgba(200,160,64,0.5); border-radius: var(--radius);
+    padding: 12px; min-height: 80px; cursor: pointer; transition: all 0.12s;
+    background: rgba(0,0,0,0.06);
 }
-.classify-bucket:hover { border-color: var(--accent); background: var(--accent-light); }
-.classify-bucket h5 { font-size: 0.76rem; color: var(--text-tertiary); margin-bottom: 8px; text-align: center; font-weight: 700; }
+.classify-bucket:hover { border-color: #e8a000; background: rgba(232,160,0,0.08); }
+.classify-bucket h5 {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.65rem; color: var(--text-light); margin-bottom: 8px; text-align: center;
+}
 .bucket-items { display: flex; flex-wrap: wrap; gap: 5px; }
 .bucket-chip {
-    background: var(--accent-light); color: var(--accent);
-    border: 1px solid rgba(232,146,58,0.3); border-radius: 100px;
-    padding: 4px 12px; font-size: 0.76rem; cursor: pointer; font-weight: 500;
+    background: rgba(232,160,0,0.2); color: #e8a000;
+    border: 1px solid rgba(232,160,0,0.4);
+    border-radius: 2px; padding: 3px 10px; font-size: 0.72rem; cursor: pointer;
 }
-.bucket-chip:hover { background: var(--danger-bg); border-color: rgba(255,59,48,0.3); color: var(--danger); }
+.bucket-chip:hover { background: rgba(255,59,48,0.15); color: var(--danger); border-color: var(--danger); }
 
-/* フィードバック */
+/* ===== フィードバック ===== */
 .battle-feedback {
-    max-width: 640px; margin: 0 auto 16px;
-    background: var(--bg-card); border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border); padding: 20px 24px; box-shadow: var(--shadow-sm);
+    max-width: 680px; margin: 0 auto 12px;
+    background: var(--panel-bg);
+    border: 3px solid var(--panel-border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+    animation: feedback-slide-in 0.25s ease;
 }
-.battle-feedback.correct { border-color: rgba(52,199,89,0.35); background: var(--success-bg); }
-.battle-feedback.incorrect { border-color: rgba(255,59,48,0.35); background: var(--danger-bg); }
-.feedback-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 8px; }
-.battle-feedback.correct .feedback-title { color: var(--success); }
+@keyframes feedback-slide-in {
+    from { transform: translateY(8px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+.battle-feedback.correct { border-color: var(--easy); }
+.battle-feedback.incorrect { border-color: var(--danger); }
+.feedback-title {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.82rem; margin-bottom: 8px; color: var(--text-light);
+}
+.battle-feedback.correct   .feedback-title { color: var(--easy); }
 .battle-feedback.incorrect .feedback-title { color: var(--danger); }
-.feedback-text { color: var(--text-secondary); font-size: 0.84rem; line-height: 1.8; }
+.feedback-text { color: #ccc; font-size: 0.78rem; line-height: 1.8; }
 .feedback-point {
-    margin-top: 12px; padding: 12px 16px;
-    background: rgba(0,0,0,0.03); border-radius: var(--radius-xs);
-    font-size: 0.8rem; color: var(--text-secondary); line-height: 1.7;
+    margin-top: 10px; padding: 10px 14px;
+    background: rgba(255,255,255,0.05); border-radius: 2px;
+    font-size: 0.74rem; color: #bbb; line-height: 1.7;
 }
-.feedback-point strong { color: var(--text-primary); font-weight: 700; }
-.exp-gained { margin-top: 10px; font-weight: 700; color: var(--accent); font-size: 0.84rem; }
+.feedback-point strong { color: var(--text-gold); }
+.exp-gained {
+    margin-top: 10px;
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.78rem; color: var(--exp-blue);
+}
 
-/* アクションボタン */
+/* ===== アクションボタン ===== */
 .battle-actions {
     display: flex; gap: 10px; justify-content: center;
-    max-width: 640px; margin: 0 auto;
+    max-width: 680px; margin: 0 auto;
 }
 
-/* ===== ボタン ===== */
-.btn {
-    padding: 10px 22px; border: none; border-radius: 100px;
-    font-size: 0.86rem; font-weight: 700; cursor: pointer;
-    transition: all var(--transition); font-family: inherit;
+/* ===== ボタン（RPGスタイル） ===== */
+.rpg-btn, .btn {
+    font-family: 'DotGothic16', sans-serif;
+    padding: 9px 20px; border: none; border-radius: var(--radius);
+    font-size: 0.78rem; cursor: pointer;
+    transition: all 0.12s;
+    position: relative;
 }
-.btn-primary { background: var(--accent); color: white; }
-.btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); }
-.btn-secondary { background: var(--bg-secondary); color: var(--text-primary); }
-.btn-secondary:hover { background: #eee; }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.rpg-btn-primary, .btn-primary {
+    background: var(--panel-border);
+    color: var(--panel-title);
+    border: 2px solid #a07010;
+    box-shadow: 0 3px 0 #7a5008;
+}
+.rpg-btn-primary:hover, .btn-primary:hover {
+    background: #ddb040;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 #7a5008;
+}
+.rpg-btn-primary:active, .btn-primary:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #7a5008;
+}
+.rpg-btn-secondary, .btn-secondary {
+    background: var(--panel-bg);
+    color: var(--text-light);
+    border: 2px solid #555;
+    box-shadow: 0 3px 0 #111;
+}
+.rpg-btn-secondary:hover, .btn-secondary:hover {
+    background: #2a1a00; border-color: var(--panel-border);
+    transform: translateY(-1px);
+}
+.rpg-btn:disabled, .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 /* ===== リザルト ===== */
-.result-card {
-    max-width: 520px; margin: 20px auto;
-    background: var(--bg-card); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+.result-card { max-width: 520px; margin: 20px auto; }
+.result-body { padding: 20px; background: var(--panel-inner); }
+.result-peroppe-area { text-align: center; margin-bottom: 10px; }
+.peroppe-svg-result {
+    width: 90px; height: 100px;
+    animation: result-jump 0.8s cubic-bezier(0.34,1.56,0.64,1) infinite alternate;
 }
-.result-banner {
-    padding: 36px 28px; text-align: center;
-    background: linear-gradient(135deg, rgba(245,213,71,0.2), rgba(232,146,58,0.1));
+@keyframes result-jump {
+    0%   { transform: translateY(0) rotate(-3deg); }
+    100% { transform: translateY(-8px) rotate(3deg); }
 }
-.result-banner h2 { font-size: 1.3rem; font-weight: 800; color: var(--text-primary); margin-bottom: 10px; }
-.result-banner .result-stars { font-size: 1.8rem; letter-spacing: 4px; margin-bottom: 6px; }
-.result-banner .result-rank { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
-.result-body { padding: 24px 28px; }
-.result-score-area { text-align: center; margin-bottom: 14px; }
-.result-score-num { font-size: 2.2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.03em; }
-.result-score-max { font-size: 0.9rem; color: var(--text-tertiary); }
+.result-score-area { text-align: center; margin-bottom: 10px; }
+.result-score-num {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1.8rem; color: var(--text-rpg);
+}
+.result-score-max { font-size: 0.9rem; color: var(--text-dim); }
+.result-banner-stars {
+    font-size: 1.6rem; letter-spacing: 4px;
+    text-align: center; margin-bottom: 6px;
+}
+.result-rank-text {
+    text-align: center; font-size: 0.76rem;
+    color: var(--text-dim); margin-bottom: 14px;
+}
 .exp-gain-area {
-    text-align: center; margin-bottom: 20px; padding: 12px;
-    background: var(--accent-light); border-radius: var(--radius-xs);
+    text-align: center; margin-bottom: 14px; padding: 10px;
+    background: rgba(68,136,255,0.1); border: 1px solid rgba(68,136,255,0.3);
+    border-radius: 2px;
 }
-.exp-gain-area .exp-gained-text { color: var(--accent); font-weight: 700; font-size: 0.92rem; }
-.result-detail { margin-bottom: 24px; }
+.exp-gain-area .exp-gained-text {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 0.82rem; color: var(--exp-blue);
+}
+.result-detail { margin-bottom: 20px; }
 .result-item {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem;
+    padding: 8px 0; border-bottom: 1px solid rgba(200,160,64,0.2);
+    font-size: 0.72rem;
 }
 .result-item:last-child { border-bottom: none; }
-.result-item .q-label { color: var(--text-secondary); }
-.result-item .q-result { font-weight: 700; }
-.result-item .q-result.correct { color: var(--success); }
+.result-item .q-label { color: var(--text-dim); }
+.result-item .q-result { font-family: 'DotGothic16', sans-serif; font-size: 0.68rem; font-weight: 400; }
+.result-item .q-result.correct   { color: var(--easy); }
 .result-item .q-result.incorrect { color: var(--danger); }
-.result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.result-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 
-/* ===== レベルアップ ===== */
+/* ===== レベルアップ演出 ===== */
 .levelup-overlay {
     position: fixed; inset: 0;
-    background: rgba(255,253,244,0.88);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    background: rgba(0,0,0,0.75);
     display: flex; align-items: center; justify-content: center;
     z-index: 1000; animation: fadeIn 0.3s ease;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .levelup-card {
-    background: var(--bg-card);
-    border: 2px solid var(--peroppe-yellow);
-    border-radius: var(--radius);
-    padding: 48px 56px;
-    text-align: center;
-    box-shadow: var(--shadow-lg);
-    animation: levelupPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    max-width: 360px; width: 90%;
+    animation: levelup-pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
 }
-@keyframes levelupPop {
-    0% { transform: scale(0.75); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+@keyframes levelup-pop {
+    0%   { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1);   opacity: 1; }
+}
+.levelup-inner {
+    padding: 24px; background: var(--panel-inner); text-align: center;
 }
 .levelup-peroppe { margin-bottom: 8px; }
-.levelup-peroppe .peroppe-svg {
-    width: 100px; height: 90px;
-    animation: levelup-bounce 0.8s ease-in-out infinite alternate;
+.peroppe-svg-lu {
+    width: 90px; height: 100px;
+    animation: lu-dance 0.5s steps(2) infinite alternate;
 }
-@keyframes levelup-bounce {
-    0% { transform: translateY(0) rotate(-3deg); }
-    100% { transform: translateY(-8px) rotate(3deg); }
+@keyframes lu-dance {
+    0%   { transform: rotate(-8deg) translateY(0); }
+    100% { transform: rotate(8deg) translateY(-6px); }
 }
-.levelup-card h2 {
-    font-size: 1.8rem; font-weight: 900; color: var(--peroppe-orange);
-    margin-bottom: 14px; letter-spacing: -0.02em;
+.levelup-level {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1.4rem; color: var(--dirt); margin-bottom: 4px;
 }
-.levelup-level { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; }
-.levelup-title { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 28px; font-weight: 600; }
+.levelup-title {
+    font-size: 0.78rem; color: var(--text-dim);
+    margin-bottom: 20px;
+}
+
+/* ===== すごろくグリッド ===== */
+.sugoroku-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+/* ===== リザルト追加スタイル ===== */
+.result-rank-badge {
+    font-family: 'DotGothic16', sans-serif;
+    font-size: 1.1rem; color: var(--text-rpg);
+    margin-bottom: 4px;
+    text-align: center;
+}
+.result-rank-badge .rank-label {
+    font-size: 0.72rem; color: var(--text-dim); margin-left: 8px;
+}
+.result-stars {
+    font-size: 1.4rem; letter-spacing: 4px;
+    text-align: center; margin-bottom: 8px;
+}
+
+/* ===== dmg-pop keyframes ===== */
+@keyframes dmg-pop {
+    0%   { transform: translateY(0) scale(1.3); opacity: 1; }
+    60%  { transform: translateY(-44px) scale(1); opacity: 1; }
+    100% { transform: translateY(-70px) scale(0.8); opacity: 0; }
+}
+
+/* ===== スターパーティクル (JS制御) ===== */
+#particleCanvas { pointer-events: none; }
 
 /* ===== レスポンシブ ===== */
-@media (max-width: 700px) {
-    .container { padding: 20px 14px; }
-    .peroppe-card { flex-direction: column; text-align: center; gap: 16px; padding: 20px; }
-    .peroppe-stats { justify-content: center; flex-wrap: wrap; gap: 10px; }
-    .peroppe-name-row { justify-content: center; }
+@media (max-width: 640px) {
+    .container { padding: 14px 10px; }
+    .peroppe-card-inner { flex-direction: column; align-items: center; text-align: center; padding: 16px; }
     .peroppe-speech::before { display: none; }
-    .sugoroku-grid { grid-template-columns: repeat(2, 1fr); }
-    .battle-stage { flex-direction: column; align-items: center; }
-    .battle-peroppe { width: 60px; }
-    .classify-buckets { grid-template-columns: 1fr; }
+    .peroppe-stats { justify-content: center; }
+    .sugoroku-inner { grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .battle-field { min-height: 150px; }
+    .enemy-side, .peroppe-side { padding: 10px; }
+    .enemy-sprite { font-size: 2.2rem; }
+    .peroppe-svg-battle { width: 60px; height: 68px; }
     .result-actions { flex-direction: column; }
-    .result-actions .btn { width: 100%; }
-    .levelup-card { padding: 32px 24px; }
+    .result-actions .rpg-btn { width: 100%; }
+    .levelup-card { max-width: 300px; }
+    .classify-buckets { grid-template-columns: 1fr; }
 }

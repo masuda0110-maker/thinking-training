@@ -4,126 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ペロッペの思考クエスト</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- パーティクル用canvas -->
+    <canvas id="particleCanvas" style="position:fixed;top:0;left:0;pointer-events:none;z-index:500;"></canvas>
+
     <div id="app">
         <!-- ヘッダー -->
         <header class="header">
             <div class="header-inner">
                 <h1 class="logo" onclick="showHome()">
-                    <span class="logo-peroppe"></span>
+                    <span class="logo-icon">🐣</span>
                     ペロッペの思考クエスト
                 </h1>
                 <div class="player-status">
                     <span class="player-level" id="playerLevel">Lv.1</span>
-                    <div class="exp-bar-mini">
-                        <div class="exp-fill-mini" id="expFillMini" style="width:0%"></div>
-                    </div>
+                    <div class="exp-bar-mini"><div class="exp-fill-mini" id="expFillMini" style="width:0%"></div></div>
                 </div>
             </div>
         </header>
 
         <!-- ホーム画面 -->
         <main id="homeScreen" class="container">
-            <!-- ペロッペ情報 -->
-            <section class="peroppe-card">
-                <div class="peroppe-character" id="peroppeHome">
-                    <svg class="peroppe-svg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
-                        <!-- 体 -->
-                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <!-- 頭 -->
-                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <!-- とさか -->
-                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
-                        <!-- 目 -->
-                        <circle cx="82" cy="88" r="4" fill="#333"/>
-                        <circle cx="118" cy="88" r="4" fill="#333"/>
-                        <!-- くちばし -->
-                        <ellipse cx="100" cy="105" rx="14" ry="10" fill="#E8923A" stroke="#333" stroke-width="3"/>
-                        <!-- ハイライト -->
-                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
-                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
-                    </svg>
-                </div>
-                <div class="peroppe-info">
-                    <div class="peroppe-name-row">
-                        <span class="peroppe-title" id="playerTitleLarge">見習い冒険者</span>
-                        <span class="peroppe-lv" id="playerLvLarge">Lv.1</span>
+            <!-- ペロッペ情報パネル -->
+            <section class="rpg-panel peroppe-card">
+                <div class="panel-title-bar"><span>🐣 冒険者ステータス</span></div>
+                <div class="peroppe-card-inner">
+                    <div class="peroppe-character">
+                        <!-- ペロッペ本体SVG（実物に忠実） -->
+                        <svg class="peroppe-svg" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg" id="peroppeHomeSvg">
+                            <!-- 体（まるっとした胴体） -->
+                            <ellipse cx="80" cy="128" rx="52" ry="44" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <!-- 頭（丸い） -->
+                            <ellipse cx="80" cy="74" rx="48" ry="46" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <!-- 頭の毛（つんつん） -->
+                            <ellipse cx="80" cy="30" rx="10" ry="14" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4.5"/>
+                            <!-- 左腕 -->
+                            <ellipse cx="28" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(-20,28,130)"/>
+                            <!-- 右腕 -->
+                            <ellipse cx="132" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(20,132,130)"/>
+                            <!-- 左足 -->
+                            <ellipse cx="60" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <!-- 右足 -->
+                            <ellipse cx="100" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <!-- ハイライト（体） -->
+                            <ellipse cx="55" cy="110" rx="14" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-30,55,110)"/>
+                            <!-- 目（左） -->
+                            <ellipse cx="64" cy="72" rx="5" ry="5.5" fill="#2a2a6e"/>
+                            <!-- 目（右） -->
+                            <ellipse cx="96" cy="72" rx="5" ry="5.5" fill="#2a2a6e"/>
+                            <!-- 目のハイライト -->
+                            <circle cx="66" cy="70" r="2" fill="white"/>
+                            <circle cx="98" cy="70" r="2" fill="white"/>
+                            <!-- 鼻（オレンジの楕円） -->
+                            <ellipse cx="80" cy="88" rx="18" ry="12" fill="#E8923A" stroke="#2a2a6e" stroke-width="3.5"/>
+                            <!-- 口（一本線） -->
+                            <line x1="72" y1="102" x2="88" y2="102" stroke="#2a2a6e" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
                     </div>
-                    <div class="peroppe-speech" id="peroppeSpeech">ぼく、ペロッペ！思考の旅に出よう！</div>
-                    <div class="exp-bar">
-                        <div class="exp-fill" id="expFill" style="width:0%"></div>
-                    </div>
-                    <div class="exp-text" id="expText">EXP: 0 / 100</div>
-                    <div class="peroppe-stats">
-                        <span id="statCleared">🏆 クリア: 0</span>
-                        <span id="statCorrect">✅ 正答率: --</span>
-                        <span id="statStreak">🔥 最高連続: 0</span>
+                    <div class="peroppe-info">
+                        <div class="peroppe-name-row">
+                            <span class="peroppe-title" id="playerTitleLarge">見習い冒険者</span>
+                            <span class="peroppe-lv" id="playerLvLarge">Lv.1</span>
+                        </div>
+                        <div class="peroppe-speech" id="peroppeSpeech">ぼく、ペロッペ！思考の旅に出よう！</div>
+                        <div class="rpg-exp-row">
+                            <span class="rpg-label">EXP</span>
+                            <div class="exp-bar"><div class="exp-fill" id="expFill" style="width:0%"></div></div>
+                            <span class="exp-text" id="expText">0/100</span>
+                        </div>
+                        <div class="peroppe-stats">
+                            <div class="stat-item"><span class="stat-icon">🏆</span><span id="statCleared">0</span></div>
+                            <div class="stat-item"><span class="stat-icon">✅</span><span id="statCorrect">--%</span></div>
+                            <div class="stat-item"><span class="stat-icon">🔥</span><span id="statStreak">0</span></div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- すごろくマップ -->
-            <section class="sugoroku-section">
-                <h2 class="section-title">🗺️ 思考の冒険マップ</h2>
-                <div class="sugoroku-map" id="sugorokuMap"></div>
+            <section class="rpg-panel map-panel">
+                <div class="panel-title-bar"><span>🗺️ 思考の大陸マップ</span></div>
+                <div class="sugoroku-map" id="sugorokuMap">
+                    <div class="map-grass-bg"></div>
+                    <div class="sugoroku-inner" id="sugorokuInner"></div>
+                </div>
             </section>
         </main>
 
         <!-- フロア選択画面 -->
         <main id="floorScreen" class="container" style="display:none;">
-            <button class="back-btn" onclick="showHome()">← マップへ戻る</button>
-            <div class="dungeon-header" id="dungeonHeader"></div>
+            <button class="rpg-back-btn" onclick="showHome()">◀ マップへ戻る</button>
+            <div class="rpg-panel" id="dungeonHeader"></div>
             <div class="floor-list" id="floorList"></div>
         </main>
 
         <!-- バトル画面 -->
         <main id="battleScreen" class="container" style="display:none;">
             <div class="battle-hud">
-                <button class="back-btn" onclick="fleeBattle()">← 撤退</button>
+                <button class="rpg-back-btn" onclick="fleeBattle()">◀ 撤退</button>
                 <div class="battle-meta">
                     <span id="battleCategory" class="battle-category"></span>
                     <span id="battleProgress" class="battle-progress"></span>
                 </div>
             </div>
 
-            <div class="battle-stage">
-                <!-- エネミー -->
-                <div class="enemy-area" id="enemyArea">
-                    <div class="enemy-sprite" id="enemySprite"></div>
-                    <div class="enemy-name" id="enemyName"></div>
-                    <div class="enemy-hp-bar">
-                        <div class="enemy-hp-fill" id="enemyHpFill" style="width:100%"></div>
+            <!-- バトルフィールド -->
+            <div class="battle-field">
+                <div class="battle-field-bg"></div>
+                <!-- エネミー側 -->
+                <div class="enemy-side">
+                    <div class="enemy-name-plate" id="enemyName"></div>
+                    <div class="enemy-hp-wrap">
+                        <span class="rpg-label">HP</span>
+                        <div class="enemy-hp-bar"><div class="enemy-hp-fill" id="enemyHpFill" style="width:100%"></div></div>
                     </div>
+                    <div class="enemy-sprite" id="enemySprite"></div>
                 </div>
-
-                <!-- ペロッペ（バトル中） -->
-                <div class="battle-peroppe">
-                    <svg class="peroppe-svg-sm" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
-                        <circle cx="82" cy="88" r="4" fill="#333"/>
-                        <circle cx="118" cy="88" r="4" fill="#333"/>
-                        <ellipse cx="100" cy="105" rx="14" ry="10" fill="#E8923A" stroke="#333" stroke-width="3"/>
-                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
-                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
-                    </svg>
+                <!-- ペロッペ側 -->
+                <div class="peroppe-side">
+                    <div class="battle-peroppe" id="battlePeroppe">
+                        <svg class="peroppe-svg-battle" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="80" cy="128" rx="52" ry="44" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="74" rx="48" ry="46" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="30" rx="10" ry="14" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4.5"/>
+                            <ellipse cx="28" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(-20,28,130)"/>
+                            <ellipse cx="132" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(20,132,130)"/>
+                            <ellipse cx="60" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="100" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="55" cy="110" rx="14" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-30,55,110)"/>
+                            <ellipse cx="64" cy="72" rx="5" ry="5.5" fill="#2a2a6e"/>
+                            <ellipse cx="96" cy="72" rx="5" ry="5.5" fill="#2a2a6e"/>
+                            <circle cx="66" cy="70" r="2" fill="white"/>
+                            <circle cx="98" cy="70" r="2" fill="white"/>
+                            <ellipse cx="80" cy="88" rx="18" ry="12" fill="#E8923A" stroke="#2a2a6e" stroke-width="3.5"/>
+                            <line x1="72" y1="102" x2="88" y2="102" stroke="#2a2a6e" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="peroppe-hp-wrap">
+                        <span class="rpg-label">ペロッペ HP</span>
+                        <div class="peroppe-hp-bar"><div class="peroppe-hp-fill" id="peroppeHpFill" style="width:100%"></div></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- メッセージウィンドウ -->
-            <div class="message-window" id="messageWindow">
+            <!-- メッセージウィンドウ（RPGスタイル） -->
+            <div class="rpg-message-window" id="messageWindow">
                 <div class="scenario-text" id="scenarioText"></div>
                 <div class="question-text" id="questionText"></div>
             </div>
 
-            <!-- コマンド（回答）エリア -->
+            <!-- コマンドエリア -->
             <div class="command-area" id="commandArea"></div>
 
             <!-- フィードバック -->
@@ -135,16 +169,34 @@
 
         <!-- リザルト画面 -->
         <main id="resultScreen" class="container" style="display:none;">
-            <div class="result-card">
-                <div class="result-banner" id="resultBanner"></div>
+            <div class="rpg-panel result-card">
+                <div class="panel-title-bar" id="resultBannerTitle"><span>🏆 クリア！</span></div>
                 <div class="result-body">
+                    <div class="result-peroppe-area">
+                        <svg class="peroppe-svg-result" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="80" cy="128" rx="52" ry="44" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="74" rx="48" ry="46" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="30" rx="10" ry="14" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4.5"/>
+                            <ellipse cx="28" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(-20,28,130)"/>
+                            <ellipse cx="132" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(20,132,130)"/>
+                            <ellipse cx="60" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="100" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="55" cy="110" rx="14" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-30,55,110)"/>
+                            <ellipse cx="64" cy="69" rx="6" ry="7" fill="#2a2a6e"/>
+                            <ellipse cx="96" cy="69" rx="6" ry="7" fill="#2a2a6e"/>
+                            <circle cx="62" cy="66" r="2.5" fill="white"/>
+                            <circle cx="94" cy="66" r="2.5" fill="white"/>
+                            <path d="M70,99 Q80,108 90,99" fill="none" stroke="#2a2a6e" stroke-width="3" stroke-linecap="round"/>
+                            <ellipse cx="80" cy="88" rx="18" ry="12" fill="#E8923A" stroke="#2a2a6e" stroke-width="3.5"/>
+                        </svg>
+                    </div>
                     <div class="result-score-area" id="resultScoreArea"></div>
                     <div class="exp-gain-area" id="expGainArea"></div>
                     <div class="result-detail" id="resultDetail"></div>
                     <div class="result-actions">
-                        <button class="btn btn-primary" onclick="retryBattle()">🔄 もう一度</button>
-                        <button class="btn btn-secondary" onclick="showFloors(currentCategory)">📋 フロア選択</button>
-                        <button class="btn btn-secondary" onclick="showHome()">🗺️ マップへ</button>
+                        <button class="rpg-btn rpg-btn-primary" onclick="retryBattle()">▶ もう一度</button>
+                        <button class="rpg-btn rpg-btn-secondary" onclick="showFloors(currentCategory)">▶ フロア選択</button>
+                        <button class="rpg-btn rpg-btn-secondary" onclick="showHome()">▶ マップへ</button>
                     </div>
                 </div>
             </div>
@@ -152,27 +204,31 @@
 
         <!-- レベルアップ演出 -->
         <div class="levelup-overlay" id="levelupOverlay" style="display:none;">
-            <div class="levelup-card">
-                <div class="levelup-peroppe">
-                    <svg class="peroppe-svg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
-                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
-                        <circle cx="82" cy="85" r="5" fill="#333"/>
-                        <circle cx="82" cy="83" r="2" fill="#fff"/>
-                        <circle cx="118" cy="85" r="5" fill="#333"/>
-                        <circle cx="118" cy="83" r="2" fill="#fff"/>
-                        <ellipse cx="100" cy="105" rx="16" ry="12" fill="#E8923A" stroke="#333" stroke-width="3"/>
-                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
-                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
-                    </svg>
+            <div class="levelup-card rpg-panel">
+                <div class="panel-title-bar"><span>⚡ LEVEL UP!</span></div>
+                <div class="levelup-inner">
+                    <div class="levelup-peroppe">
+                        <svg class="peroppe-svg-lu" viewBox="0 0 160 180" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="80" cy="128" rx="52" ry="44" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="74" rx="48" ry="46" fill="#F7D84B" stroke="#2a2a6e" stroke-width="5"/>
+                            <ellipse cx="80" cy="30" rx="10" ry="14" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4.5"/>
+                            <ellipse cx="28" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(-30,28,130)"/>
+                            <ellipse cx="132" cy="130" rx="16" ry="12" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4" transform="rotate(30,132,130)"/>
+                            <ellipse cx="60" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="100" cy="168" rx="18" ry="11" fill="#F7D84B" stroke="#2a2a6e" stroke-width="4"/>
+                            <ellipse cx="55" cy="110" rx="14" ry="8" fill="rgba(255,255,255,0.35)" transform="rotate(-30,55,110)"/>
+                            <ellipse cx="64" cy="69" rx="6" ry="7" fill="#2a2a6e"/>
+                            <ellipse cx="96" cy="69" rx="6" ry="7" fill="#2a2a6e"/>
+                            <circle cx="62" cy="66" r="2.5" fill="white"/>
+                            <circle cx="94" cy="66" r="2.5" fill="white"/>
+                            <ellipse cx="80" cy="88" rx="18" ry="12" fill="#E8923A" stroke="#2a2a6e" stroke-width="3.5"/>
+                            <path d="M70,99 Q80,108 90,99" fill="none" stroke="#2a2a6e" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="levelup-level" id="levelupLevel">Lv.2</div>
+                    <div class="levelup-title" id="levelupTitle">称号が変わった！</div>
+                    <button class="rpg-btn rpg-btn-primary" onclick="closeLevelUp()">▶ やったー！</button>
                 </div>
-                <h2>LEVEL UP!</h2>
-                <div class="levelup-level" id="levelupLevel"></div>
-                <div class="levelup-title" id="levelupTitle"></div>
-                <button class="btn btn-primary" onclick="closeLevelUp()">やったー！</button>
             </div>
         </div>
     </div>
