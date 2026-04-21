@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>思考クエスト - ビジネス思考力RPG</title>
+    <title>ペロッペの思考クエスト</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,9 +11,11 @@
         <!-- ヘッダー -->
         <header class="header">
             <div class="header-inner">
-                <h1 class="logo" onclick="showHome()">⚔️ 思考クエスト</h1>
+                <h1 class="logo" onclick="showHome()">
+                    <span class="logo-peroppe"></span>
+                    ペロッペの思考クエスト
+                </h1>
                 <div class="player-status">
-                    <span class="player-title" id="playerTitle">見習い冒険者</span>
                     <span class="player-level" id="playerLevel">Lv.1</span>
                     <div class="exp-bar-mini">
                         <div class="exp-fill-mini" id="expFillMini" style="width:0%"></div>
@@ -24,36 +26,56 @@
 
         <!-- ホーム画面 -->
         <main id="homeScreen" class="container">
-            <!-- プレイヤー情報 -->
-            <section class="player-card">
-                <div class="player-avatar" id="playerAvatar">🧙</div>
-                <div class="player-info">
-                    <div class="player-name-row">
-                        <span class="player-title-large" id="playerTitleLarge">見習い冒険者</span>
-                        <span class="player-lv" id="playerLvLarge">Lv.1</span>
+            <!-- ペロッペ情報 -->
+            <section class="peroppe-card">
+                <div class="peroppe-character" id="peroppeHome">
+                    <svg class="peroppe-svg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 体 -->
+                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <!-- 頭 -->
+                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <!-- とさか -->
+                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
+                        <!-- 目 -->
+                        <circle cx="82" cy="88" r="4" fill="#333"/>
+                        <circle cx="118" cy="88" r="4" fill="#333"/>
+                        <!-- くちばし -->
+                        <ellipse cx="100" cy="105" rx="14" ry="10" fill="#E8923A" stroke="#333" stroke-width="3"/>
+                        <!-- ハイライト -->
+                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
+                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
+                    </svg>
+                </div>
+                <div class="peroppe-info">
+                    <div class="peroppe-name-row">
+                        <span class="peroppe-title" id="playerTitleLarge">見習い冒険者</span>
+                        <span class="peroppe-lv" id="playerLvLarge">Lv.1</span>
                     </div>
+                    <div class="peroppe-speech" id="peroppeSpeech">ぼく、ペロッペ！思考の旅に出よう！</div>
                     <div class="exp-bar">
                         <div class="exp-fill" id="expFill" style="width:0%"></div>
                     </div>
                     <div class="exp-text" id="expText">EXP: 0 / 100</div>
-                    <div class="player-stats">
+                    <div class="peroppe-stats">
                         <span id="statCleared">🏆 クリア: 0</span>
                         <span id="statCorrect">✅ 正答率: --</span>
-                        <span id="statStreak">🔥 連続正解: 0</span>
+                        <span id="statStreak">🔥 最高連続: 0</span>
                     </div>
                 </div>
             </section>
 
-            <!-- ワールドマップ -->
-            <section class="world-map">
-                <h2 class="section-title">⚔️ ダンジョン選択</h2>
-                <div class="dungeon-grid" id="dungeonGrid"></div>
+            <!-- すごろくマップ -->
+            <section class="sugoroku-section">
+                <h2 class="section-title">🗺️ 思考の冒険マップ</h2>
+                <div class="sugoroku-map" id="sugorokuMap"></div>
             </section>
         </main>
 
         <!-- フロア選択画面 -->
         <main id="floorScreen" class="container" style="display:none;">
-            <button class="back-btn" onclick="showHome()">← ワールドマップへ</button>
+            <button class="back-btn" onclick="showHome()">← マップへ戻る</button>
             <div class="dungeon-header" id="dungeonHeader"></div>
             <div class="floor-list" id="floorList"></div>
         </main>
@@ -61,19 +83,37 @@
         <!-- バトル画面 -->
         <main id="battleScreen" class="container" style="display:none;">
             <div class="battle-hud">
-                <button class="back-btn" onclick="fleeBattle()">🏃 撤退</button>
+                <button class="back-btn" onclick="fleeBattle()">← 撤退</button>
                 <div class="battle-meta">
                     <span id="battleCategory" class="battle-category"></span>
                     <span id="battleProgress" class="battle-progress"></span>
                 </div>
             </div>
 
-            <!-- エネミー表示 -->
-            <div class="enemy-area" id="enemyArea">
-                <div class="enemy-sprite" id="enemySprite"></div>
-                <div class="enemy-name" id="enemyName"></div>
-                <div class="enemy-hp-bar">
-                    <div class="enemy-hp-fill" id="enemyHpFill" style="width:100%"></div>
+            <div class="battle-stage">
+                <!-- エネミー -->
+                <div class="enemy-area" id="enemyArea">
+                    <div class="enemy-sprite" id="enemySprite"></div>
+                    <div class="enemy-name" id="enemyName"></div>
+                    <div class="enemy-hp-bar">
+                        <div class="enemy-hp-fill" id="enemyHpFill" style="width:100%"></div>
+                    </div>
+                </div>
+
+                <!-- ペロッペ（バトル中） -->
+                <div class="battle-peroppe">
+                    <svg class="peroppe-svg-sm" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
+                        <circle cx="82" cy="88" r="4" fill="#333"/>
+                        <circle cx="118" cy="88" r="4" fill="#333"/>
+                        <ellipse cx="100" cy="105" rx="14" ry="10" fill="#E8923A" stroke="#333" stroke-width="3"/>
+                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
+                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
+                    </svg>
                 </div>
             </div>
 
@@ -102,7 +142,7 @@
                     <div class="exp-gain-area" id="expGainArea"></div>
                     <div class="result-detail" id="resultDetail"></div>
                     <div class="result-actions">
-                        <button class="btn btn-primary" onclick="retryBattle()">🔄 再挑戦</button>
+                        <button class="btn btn-primary" onclick="retryBattle()">🔄 もう一度</button>
                         <button class="btn btn-secondary" onclick="showFloors(currentCategory)">📋 フロア選択</button>
                         <button class="btn btn-secondary" onclick="showHome()">🗺️ マップへ</button>
                     </div>
@@ -113,11 +153,26 @@
         <!-- レベルアップ演出 -->
         <div class="levelup-overlay" id="levelupOverlay" style="display:none;">
             <div class="levelup-card">
-                <div class="levelup-icon">⚡</div>
+                <div class="levelup-peroppe">
+                    <svg class="peroppe-svg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="100" cy="130" rx="80" ry="45" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="100" cy="85" rx="60" ry="50" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="90" cy="42" rx="18" ry="14" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="110" cy="38" rx="14" ry="12" fill="#F5D547" stroke="#333" stroke-width="4"/>
+                        <ellipse cx="100" cy="45" rx="16" ry="13" fill="#F5D547" stroke="#333" stroke-width="3.5"/>
+                        <circle cx="82" cy="85" r="5" fill="#333"/>
+                        <circle cx="82" cy="83" r="2" fill="#fff"/>
+                        <circle cx="118" cy="85" r="5" fill="#333"/>
+                        <circle cx="118" cy="83" r="2" fill="#fff"/>
+                        <ellipse cx="100" cy="105" rx="16" ry="12" fill="#E8923A" stroke="#333" stroke-width="3"/>
+                        <ellipse cx="72" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(-20,72,110)"/>
+                        <ellipse cx="128" cy="110" rx="10" ry="5" fill="rgba(255,255,255,0.5)" transform="rotate(20,128,110)"/>
+                    </svg>
+                </div>
                 <h2>LEVEL UP!</h2>
                 <div class="levelup-level" id="levelupLevel"></div>
                 <div class="levelup-title" id="levelupTitle"></div>
-                <button class="btn btn-primary" onclick="closeLevelUp()">OK</button>
+                <button class="btn btn-primary" onclick="closeLevelUp()">やったー！</button>
             </div>
         </div>
     </div>
